@@ -1,5 +1,5 @@
 import pygame,math,random
-
+# 8번까지 구현함
 pygame.init()
 width,height=640,480
 acc=[0,0]
