@@ -2,6 +2,7 @@ import pygame,math
 import sys
 import time
 pre_time=time.time()
+pree_time=time.time()
 TEXTCOLOR = (255, 255, 255)
 COOLTIME_LIMIT=5
 class Mundo:
@@ -29,12 +30,12 @@ class Mundo:
             if 32 <= self.x + 5 <= 640 - 32:
                 self.x = self.x + 5
 
-    def attack(self,time):
+    def attack(self,tmptime):
         position = pygame.mouse.get_pos()
-        time = time.time();
-        self.arrows.append([math.atan2(position[1] - (playpos[1] + 32), position[0] - (playpos[0] + 26)), \
-                       playpos[0] + 26, playpos[1] + 32])
-        return time
+        tmptime = time.time();
+        self.arrows.append([math.atan2(position[1] - (self.x + 32), position[0] - (self.y + 26)), \
+                       self.y + 26, self.x + 32])
+        return tmptime
     def injured(self,oppomundo):
         for bullet in oppomundo.arrows:
             bullrect=pygame.Rect(arrow.get_rect())
@@ -42,11 +43,11 @@ class Mundo:
             bullrect.right=bullet[2]
             tmpmundo=mundo.get_rect(bottomright=(self.x,self.y))
             if tmpmundo.colliderect(bullrect):
-                self.health-=oppomundo.strength
+                self.health-=oppomundo.strength/self.armor*100
                 oppomundo.arrows.pop()
 
 Mundo1=Mundo(320,100)
-Mundo2=Mundo(320.500)
+Mundo2=Mundo(320,500)
 def basicscreenblit():
     screen.fill((0, 0, 0))  # R,G,B
     for x in range(width // grass.get_width() + 1):
@@ -147,6 +148,10 @@ while True:
                 keys[3]=True
             elif event.key == pygame.K_SPACE and time.time()-pre_time>=Mundo1.cooltime_limit:
                 pre_time=Mundo1.attack(pre_time)
+            if time.time()-pree_time>=1:
+                Mundo1.health+=Mundo1.healthregen
+                Mundo2.health+=Mundo2.healthregen
+                pree_time=time.time()
         if event.type==pygame.KEYUP:
             if event.key==pygame.K_w:
                 keys[0]=False
