@@ -44,6 +44,7 @@ mundo=pygame.image.load("resources/images/mundo.png")
 grass=pygame.image.load("resources/images/grass.png")
 bush=pygame.image.load("resources/images/bush.png")
 arrow=pygame.image.load("resources/images/bullet.png")
+wall=pygame.image.load("resources/images/wall.png")
 
 keys=[False,False,False,False]
 playpos=[100,100]
@@ -60,7 +61,8 @@ while True:
     screen.blit(bush, (540, 135))
     screen.blit(bush, (540, 240))
     screen.blit(bush, (540, 345))
-
+    for x in range(width//wall.get_width()+1):
+        screen.blit(wall,(x*40,240))
     position=pygame.mouse.get_pos()
     angle=math.atan2(position[1]-(playpos[1]+32),position[0]-(playpos[0]+26))
     playerrot=pygame.transform.rotate(mundo, 360 - angle * 57.29)
@@ -78,7 +80,6 @@ while True:
     for projectile in arrows:
         arrow1=pygame.transform.rotate(arrow,360-projectile[0]*57.29)
         screen.blit(arrow1,(projectile[1],projectile[2]))
-        screen.blit()
     pygame.display.flip()
 
     for event in pygame.event.get():
@@ -110,11 +111,15 @@ while True:
             elif event.key==pygame.K_d:
                 keys[3]=False
     if keys[0]:
-        playpos[1]=playpos[1]-5
+        if 23<=playpos[1]-5<=240-23:
+            playpos[1]=playpos[1]-5
     elif keys[2]:
-        playpos[1]=playpos[1]+5
+        if 23 <= playpos[1] + 5 <= 240-23:
+            playpos[1]=playpos[1]+5
     elif keys[1]:
-        playpos[0]=playpos[0]-5
+        if 32 <= playpos[0] - 5 <= 640-32:
+            playpos[0]=playpos[0]-5
     elif keys[3]:
-        playpos[0]=playpos[0]+5
+        if 32 <= playpos[0] + 5 <= 640-32:
+            playpos[0]=playpos[0]+5
 
