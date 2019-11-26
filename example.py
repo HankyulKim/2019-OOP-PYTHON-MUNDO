@@ -4,7 +4,6 @@ import time
 pre_time=time.time()
 pree_time=time.time()
 TEXTCOLOR = (255, 255, 255)
-COOLTIME_LIMIT=5
 class Mundo:
     def __init__(self,x,y):
         self.health=100
@@ -131,6 +130,8 @@ while True:
     mundoblit(Mundo2,position)
     arrowblit(Mundo1)
     arrowblit(Mundo2)
+    # Mundo1.injured(Mundo2)
+    # Mundo2.injured(Mundo1)
     pygame.display.flip()
     for event in pygame.event.get():
         if event.type==pygame.QUIT:
