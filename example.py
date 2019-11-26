@@ -33,8 +33,8 @@ class Mundo:
     def attack(self,tmptime):
         position = pygame.mouse.get_pos()
         tmptime = time.time();
-        self.arrows.append([math.atan2(position[1] - (self.x + 32), position[0] - (self.y + 26)), \
-                       self.y + 26, self.x + 32])
+        self.arrows.append([math.atan2(position[1] - (self.y + 32), position[0] - (self.x + 26)), \
+                       self.x + 26, self.y + 32])
         return tmptime
     def injured(self,oppomundo):
         for bullet in oppomundo.arrows:
@@ -47,7 +47,7 @@ class Mundo:
                 oppomundo.arrows.pop()
 
 Mundo1=Mundo(320,100)
-Mundo2=Mundo(320,500)
+Mundo2=Mundo(320,400)
 def basicscreenblit():
     screen.fill((0, 0, 0))  # R,G,B
     for x in range(width // grass.get_width() + 1):
@@ -65,7 +65,7 @@ def basicscreenblit():
         screen.blit(wall, (x * 40, 240))
 
 def mundoblit(tmpmundo,pos):
-    angle = math.atan2(pos[1] - (tmpmundo.x + 32), pos[0] - (tmpmundo.y + 26))
+    angle = math.atan2(pos[1] - (tmpmundo.y + 32), pos[0] - (tmpmundo.x + 26))
     playerrot = pygame.transform.rotate(mundo, 360 - angle * 57.29)
     playerpos1 = (tmpmundo.x - playerrot.get_rect().width // 2, tmpmundo.y - playerrot.get_rect().height // 2)
     screen.blit(playerrot, playerpos1)
@@ -124,7 +124,6 @@ arrow=pygame.image.load("resources/images/bullet.png")
 wall=pygame.image.load("resources/images/wall.png")
 
 keys=[False,False,False,False]
-playpos=[100,100]
 while True:
     basicscreenblit()
     position=pygame.mouse.get_pos()
