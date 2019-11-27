@@ -43,6 +43,10 @@ class Mundo:
                             self.x + 26, self.y + 32])
         return tmptime
 
+    def spelluse(self,type)->None: # 스펠을 사용
+        pass
+
+
     def injured(self, oppomundo):  # 공격받았을 때 체력이 깎임
         for bullet in oppomundo.arrows:
             bullrect = pygame.Rect(arrow.get_rect())
