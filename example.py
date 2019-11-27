@@ -10,7 +10,7 @@ pre4_time=time.time()
 TEXTCOLOR = (255, 255, 255)
 
 
-class Mundo:
+class Mundo: #문도 클래스
     def __init__(self, x, y):
         self.health = 100
         self.strength = 100
