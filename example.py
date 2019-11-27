@@ -22,7 +22,7 @@ class Mundo:
         self.spell1cool = 3
         self.spell2type = 2
         self.spell2cool = 3
-        self.spelllist=[0,"heal","flash"]
+        self.spelllist=[0,"heal","flash", "ignite", "exhaust", "ghost"]
         self.speed=5
         self.x = x
         self.y = y
@@ -69,6 +69,11 @@ class Mundo:
         self.y = returnlist[1]
         if returnlist[2]=='heal':
             self.health+=20
+        if returnlist[2]=='exhaust':
+            pass
+        if returnlist[2]=='ghost':
+            self.speed=7
+
         return tmtime
 
     def injured(self, oppomundo):  # 공격받았을 때 체력이 깎임
@@ -104,6 +109,18 @@ def spelluses(mx,my,spelltype)->list:
         list.append(mx)
         list.append(my)
         list.append("heal")
+    elif spelltype == "ignite":
+        list.append(mx)
+        list.append(my)
+        list.append("ignite")
+    elif spelltype == "exhaust":
+        list.append(mx)
+        list.append(my)
+        list.append("exhaust")
+    elif spelltype == "ghost":
+        list.append(mx)
+        list.append(my)
+        list.append("ghost")
     return list
 
 
