@@ -4,6 +4,9 @@ import time
 
 pre_time = time.time()
 pree_time = time.time()
+pre2_time=time.time()
+pre3_time=time.time()
+pre4_time=time.time()
 TEXTCOLOR = (255, 255, 255)
 
 
@@ -13,49 +16,93 @@ class Mundo:
         self.strength = 100
         self.armor = 100
         self.healthregen = 0.02
-        self.cooltime_limit = 5
+        self.cooltime_limit = 0.2
         self.arrows = []
         self.spell1type = 1
-        self.spell1cool = 30
+        self.spell1cool = 3
         self.spell2type = 2
-        self.spell2cool = 30
+        self.spell2cool = 3
+        self.spelllist=[0,"heal","flash"]
+        self.speed=5
         self.x = x
         self.y = y
 
-    def move(self, k0, k1, k2, k3):  # wasd로 움직임
-        if k0:
-            if 23 <= self.y - 5 <= 240 - 23:
-                self.y = self.y - 5
-        elif k2:
-            if 23 <= self.y + 5 <= 240 - 23:
-                self.y = self.y + 5
-        elif k1:
-            if 32 <= self.x - 5 <= 640 - 32:
-                self.x = self.x - 5
+    def move(self, k0, k1, k2, k3,ty):  # wasd로 움직임
+        if ty==1:
+            if k0:
+                if 23 <= self.y - self.speed <= 240 - 23:
+                    self.y = self.y - self.speed
+            elif k2:
+                if 23 <= self.y + self.speed <= 240 - 23:
+                    self.y = self.y + self.speed
+        elif ty==2:
+            if k0:
+                if 240+23<=self.y-self.speed<=480-23:
+                    self.y=self.y-self.speed
+            elif k2:
+                if 240+23<=self.y+self.speed<=480-23:
+                    self.y=self.y+self.speed
+        if k1:
+            if 32 <= self.x - self.speed <= 640 - 32:
+                self.x = self.x - self.speed
         elif k3:
-            if 32 <= self.x + 5 <= 640 - 32:
-                self.x = self.x + 5
+            if 32 <= self.x + self.speed <= 640 - 32:
+                self.x = self.x + self.speed
 
-    def attack(self, tmptime):  # 스킬을 사용
+    def attack(self):  # 스킬을 사용
         position = pygame.mouse.get_pos()
         tmptime = time.time();
         self.arrows.append([math.atan2(position[1] - (self.y + 32), position[0] - (self.x + 26)), \
                             self.x + 26, self.y + 32])
+        pygame.mixer.music.load('resources/audio/throw.mp3')
+        pygame.mixer.music.play(0)
         return tmptime
 
-    def spelluse(self,type)->None: # 스펠을 사용
-        pass
-
+    def spelluse(self,type): # 스펠을 사용
+        returnlist=[]
+        tmtime=time.time()
+        if type=='r':
+            returnlist=spelluses(self.x,self.y,self.spelllist[self.spell1type])
+        if type=='f':
+            returnlist=spelluses(self.x,self.y,self.spelllist[self.spell2type])
+        self.x = returnlist[0]
+        self.y = returnlist[1]
+        if returnlist[2]=='heal':
+            self.health+=20
+        return tmtime
 
     def injured(self, oppomundo):  # 공격받았을 때 체력이 깎임
+        global pre2_time
+        index1=0
         for bullet in oppomundo.arrows:
             bullrect = pygame.Rect(arrow.get_rect())
             bullrect.left = bullet[1]
-            bullrect.right = bullet[2]
-            tmpmundo = mundo.get_rect(bottomright=(self.x, self.y))
+            bullrect.top = bullet[2]
+            tmpmundo = pygame.Rect(mundo.get_rect())
+            tmpmundo.center=(self.x,self.y)
             if tmpmundo.colliderect(bullrect):
                 self.health -= oppomundo.strength / self.armor * 100
-                oppomundo.arrows.pop()
+                oppomundo.arrows.pop(index1)
+                pygame.mixer.music.load('resources/audio/injured.mp3')
+                pygame.mixer.music.play(0)
+                pre2_time=time.time()
+                self.speed=3
+            if time.time()-pre2_time>=2:
+                self.speed=5
+            index1+=1
+def spelluses(mx,my,spelltype)->list:
+    list = []
+    if spelltype == "flash":
+        posi = pygame.mouse.get_pos()
+        angle = math.atan2(posi[1] - (my + 32), posi[0] - (mx + 26))
+        list.append(mx+math.cos(angle)*100)
+        list.append(my+math.sin(angle)*100)
+        list.append("flash")
+    elif spelltype == "heal":
+        list.append(mx)
+        list.append(my)
+        list.append("heal")
+    return list
 
 
 def basicscreenblit():
@@ -85,8 +132,8 @@ def mundoblit(tmpmundo, pos):  # 문도의 상태 갱신
 def arrowblit(tmpmundo):  # 칼의 상태 갱신
     for bullet in tmpmundo.arrows:
         index = 0
-        velx = math.cos(bullet[0]) * 10
-        vely = math.sin(bullet[0]) * 10
+        velx = math.cos(bullet[0]) * 7.5
+        vely = math.sin(bullet[0]) * 7.5
         bullet[1] += velx
         bullet[2] += vely
         if bullet[1] < -64 or bullet[1] > 640 or bullet[2] < -64 or bullet[2] > 480:
@@ -123,8 +170,8 @@ def exit_game(self):  # 게임 종료
 
 # 8번까지 구현함
 pygame.init()
-Mundo1 = Mundo(320, 100)
-Mundo2 = Mundo(320, 400)
+Mundo1 = Mundo(320.0, 100.0)
+Mundo2 = Mundo(320.0, 400.0)
 width, height = 640, 480
 window = pygame.display.set_mode((width, height))
 background = pygame.image.load("resources/images/background.jpg")
@@ -151,8 +198,8 @@ while True:
     mundoblit(Mundo2, position)
     arrowblit(Mundo1)
     arrowblit(Mundo2)
-    # Mundo1.injured(Mundo2)// 소켓통신 때 구현
-    # Mundo2.injured(Mundo1)// "
+    Mundo1.injured(Mundo2)
+    Mundo2.injured(Mundo1)
     pygame.display.flip()
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -167,8 +214,12 @@ while True:
                 keys[2] = True
             elif event.key == pygame.K_d:
                 keys[3] = True
-            elif event.key == pygame.K_SPACE and time.time() - pre_time >= Mundo1.cooltime_limit:
-                pre_time = Mundo1.attack(pre_time)
+            elif event.key == pygame.K_q and time.time() - pre_time >= Mundo1.cooltime_limit:
+                pre_time = Mundo1.attack()
+            elif event.key==pygame.K_r and time.time()-pre3_time>=Mundo1.spell1cool:
+                pre3_time=Mundo1.spelluse('r')
+            elif event.key==pygame.K_f and time.time()-pre4_time>=Mundo1.spell2cool:
+                pre4_time=Mundo1.spelluse('f')
             if time.time() - pree_time >= 1:
                 Mundo1.health += Mundo1.healthregen
                 Mundo2.health += Mundo2.healthregen
@@ -182,4 +233,4 @@ while True:
                 keys[2] = False
             elif event.key == pygame.K_d:
                 keys[3] = False
-    Mundo1.move(keys[0], keys[1], keys[2], keys[3])
+    Mundo1.move(keys[0], keys[1], keys[2], keys[3],1)
