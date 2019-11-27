@@ -12,10 +12,14 @@ class Mundo:
         self.healthregen=0.02
         self.cooltime_limit=5
         self.arrows=[]
+        self.spell1type=1
+        self.spell1cool=30
+        self.spell2type=2
+        self.spell2cool=30
         self.x=x
         self.y=y
 
-    def move(self,k0,k1,k2,k3):
+    def move(self,k0,k1,k2,k3): # wasd로 움직임
         if k0:
             if 23 <= self.y - 5 <= 240 - 23:
                 self.y = self.y - 5
@@ -29,13 +33,13 @@ class Mundo:
             if 32 <= self.x + 5 <= 640 - 32:
                 self.x = self.x + 5
 
-    def attack(self,tmptime):
+    def attack(self,tmptime): # 스킬을 사용
         position = pygame.mouse.get_pos()
         tmptime = time.time();
         self.arrows.append([math.atan2(position[1] - (self.y + 32), position[0] - (self.x + 26)), \
                        self.x + 26, self.y + 32])
         return tmptime
-    def injured(self,oppomundo):
+    def injured(self,oppomundo): # 공격받았을 때 체력이 깎임
         for bullet in oppomundo.arrows:
             bullrect=pygame.Rect(arrow.get_rect())
             bullrect.left=bullet[1]
@@ -63,13 +67,13 @@ def basicscreenblit():
     for x in range(width // wall.get_width() + 1):
         screen.blit(wall, (x * 40, 240))
 
-def mundoblit(tmpmundo,pos):
+def mundoblit(tmpmundo,pos): # 문도의 상태 갱신
     angle = math.atan2(pos[1] - (tmpmundo.y + 32), pos[0] - (tmpmundo.x + 26))
     playerrot = pygame.transform.rotate(mundo, 360 - angle * 57.29)
     playerpos1 = (tmpmundo.x - playerrot.get_rect().width // 2, tmpmundo.y - playerrot.get_rect().height // 2)
     screen.blit(playerrot, playerpos1)
 
-def arrowblit(tmpmundo):
+def arrowblit(tmpmundo): # 칼의 상태 갱신
     for bullet in tmpmundo.arrows:
         index=0
         velx=math.cos(bullet[0])*10
@@ -82,7 +86,7 @@ def arrowblit(tmpmundo):
     for projectile in tmpmundo.arrows:
         arrow1=pygame.transform.rotate(arrow,360-projectile[0]*57.29)
         screen.blit(arrow1,(projectile[1],projectile[2]))
-def wait_for_key_pressed():
+def wait_for_key_pressed(): # 초기 화면 전환
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -92,13 +96,13 @@ def wait_for_key_pressed():
                     exit_game()
                 # When we press any key we leave the loop and the game continues.
                 return
-def draw_text(text, font, surface, x, y):
+def draw_text(text, font, surface, x, y): # 화면에 텍스트 입력
     text_obj = font.render(text, True, TEXTCOLOR)
     text_rect = text_obj.get_rect()
     text_rect.topleft = (x, y)
     surface.blit(font.render(text, True, TEXTCOLOR), text_rect)
 
-def exit_game(self):
+def exit_game(self): # 게임 종료
     pygame.quit()
     sys.exit()
 
@@ -130,8 +134,8 @@ while True:
     mundoblit(Mundo2,position)
     arrowblit(Mundo1)
     arrowblit(Mundo2)
-    # Mundo1.injured(Mundo2)
-    # Mundo2.injured(Mundo1)
+    # Mundo1.injured(Mundo2)// 소켓통신 때 구현
+    # Mundo2.injured(Mundo1)// "
     pygame.display.flip()
     for event in pygame.event.get():
         if event.type==pygame.QUIT:
