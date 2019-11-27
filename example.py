@@ -103,6 +103,8 @@ def spelluses(mx,my,spelltype)->list:
         list.append(mx+math.cos(angle)*100)
         list.append(my+math.sin(angle)*100)
         list.append("flash")
+        pygame.mixer.music.load('resources/audio/flash.mp3')
+        pygame.mixer.music.play(0)
     elif spelltype == "heal":
         list.append(mx)
         list.append(my)
