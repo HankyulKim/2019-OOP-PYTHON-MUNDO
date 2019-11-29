@@ -70,7 +70,7 @@ class Mundo: #문도 클래스
         if returnlist[2]=='heal':
             self.health+=20
         if returnlist[2]=='exhaust':
-            pass
+
         if returnlist[2]=='ghost':
             self.speed=7
 
