@@ -23,7 +23,7 @@ class Mundo:
         self.spell2type = 2
         self.spell2cool = 3
         self.spelllist=[0,"heal","flash", "ignite", "exhaust", "ghost"]
-        self.speed=5
+        self.speed=3
         self.x = x
         self.y = y
 
