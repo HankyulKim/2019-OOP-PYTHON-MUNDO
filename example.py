@@ -153,7 +153,10 @@ def mundoblit(tmpmundo, pos):  # 문도의 상태 갱신
     angle = math.atan2(pos[1] - (tmpmundo.y + 32), pos[0] - (tmpmundo.x + 26))
     playerrot = pygame.transform.rotate(mundo, 360 - angle * 57.29)
     playerpos1 = (tmpmundo.x - playerrot.get_rect().width // 2, tmpmundo.y - playerrot.get_rect().height // 2)
-    screen.blit(playerrot, playerpos1)
+    if((tmpmundo.x - playerrot.get_rect().width // 2)>=95 and (tmpmundo.x - playerrot.get_rect().width // 2)<=500):
+        screen.blit(playerrot, playerpos1)
+    if((tmpmundo.y - playerrot.get_rect().height // 2)<=-5 or (tmpmundo.y - playerrot.get_rect().height // 2)>=410):
+        screen.blit(playerrot, playerpos1)
 
 
 def arrowblit(tmpmundo):  # 칼의 상태 갱신
