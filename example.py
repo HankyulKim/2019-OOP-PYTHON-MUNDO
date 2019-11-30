@@ -149,13 +149,16 @@ def basicscreenblit():
         screen.blit(wall, (x * 40, 240))
 
 
-def mundoblit(tmpmundo, pos):  # 문도의 상태 갱신
+def mundoblit(tmpmundo, pos,a):  # 문도의 상태 갱신
     angle = math.atan2(pos[1] - (tmpmundo.y + 32), pos[0] - (tmpmundo.x + 26))
     playerrot = pygame.transform.rotate(mundo, 360 - angle * 57.29)
     playerpos1 = (tmpmundo.x - playerrot.get_rect().width // 2, tmpmundo.y - playerrot.get_rect().height // 2)
-    if((tmpmundo.x - playerrot.get_rect().width // 2)>=95 and (tmpmundo.x - playerrot.get_rect().width // 2)<=500):
-        screen.blit(playerrot, playerpos1)
-    if((tmpmundo.y - playerrot.get_rect().height // 2)<=-5 or (tmpmundo.y - playerrot.get_rect().height // 2)>=410):
+    if a==0:
+        if((tmpmundo.x - playerrot.get_rect().width // 2)>=95 and (tmpmundo.x - playerrot.get_rect().width // 2)<=500):
+            screen.blit(playerrot, playerpos1)
+        if((tmpmundo.y - playerrot.get_rect().height // 2)<=-5 or (tmpmundo.y - playerrot.get_rect().height // 2)>=410):
+            screen.blit(playerrot, playerpos1)
+    if a==1:
         screen.blit(playerrot, playerpos1)
 
 
@@ -172,6 +175,7 @@ def arrowblit(tmpmundo):  # 칼의 상태 갱신
     for projectile in tmpmundo.arrows:
         arrow1 = pygame.transform.rotate(arrow, 360 - projectile[0] * 57.29)
         screen.blit(arrow1, (projectile[1], projectile[2]))
+
 
 
 def wait_for_key_pressed():  # 초기 화면 전환
@@ -222,11 +226,23 @@ wall = pygame.image.load("resources/images/wall.png")
 
 keys1 = [False, False, False, False]
 keys2 = [False, False, False, False]
+check1=0
+check2=0
+check_time1=0
+check_time2=0
 while True:
     basicscreenblit()
     position = pygame.mouse.get_pos()
-    mundoblit(Mundo1, position)
-    mundoblit(Mundo2, position)
+    mundoblit(Mundo1, position,check1)
+    mundoblit(Mundo2, position,check2)
+    if(check_time1 !=0):
+        now_time1=time.time()
+        if(now_time1-check_time1>=0.5):
+            check1=0
+    if (check_time2 != 0):
+        now_time2 = time.time()
+        if (now_time2 - check_time2 >= 0.5):
+            check2 = 0
     arrowblit(Mundo1)
     arrowblit(Mundo2)
     Mundo1.injured(Mundo2)
@@ -247,6 +263,9 @@ while True:
                 keys1[3] = True
             elif event.key == pygame.K_q and time.time() - pre_time >= Mundo1.cooltime_limit:
                 pre_time = Mundo1.attack()
+                check1=1
+                check_time1=time.time()
+                mundoblit(Mundo1,position,check1)
             elif event.key == pygame.K_r and time.time() - pre3_time >= Mundo1.spell1cool:
                 pre3_time = Mundo1.spelluse('r')
             elif event.key == pygame.K_f and time.time() - pre4_time >= Mundo1.spell2cool:
@@ -275,6 +294,9 @@ while True:
                 keys2[3] = True
             elif event.key == pygame.K_SLASH and time.time() - pre_time >= Mundo2.cooltime_limit:
                 pre_time = Mundo2.attack()
+                check2 = 1
+                check_time2 = time.time()
+                mundoblit(Mundo2, position, check2)
             elif event.key==pygame.K_PERIOD and time.time()-pre3_time>=Mundo2.spell1cool:
                 pre3_time=Mundo2.spelluse('r')
             elif event.key==pygame.K_COMMA and time.time()-pre4_time>=Mundo2.spell2cool:
