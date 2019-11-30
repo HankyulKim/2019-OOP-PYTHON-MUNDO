@@ -69,8 +69,6 @@ class Mundo:
         self.y = returnlist[1]
         if returnlist[2]=='heal':
             self.health+=20
-        if returnlist[2]=='exhaust':
-
         if returnlist[2]=='ghost':
             self.speed=7
 
@@ -209,7 +207,8 @@ bush = pygame.image.load("resources/images/bush.png")
 arrow = pygame.image.load("resources/images/bullet.png")
 wall = pygame.image.load("resources/images/wall.png")
 
-keys = [False, False, False, False]
+keys1 = [False, False, False, False]
+keys2 = [False, False, False, False]
 while True:
     basicscreenblit()
     position = pygame.mouse.get_pos()
@@ -226,30 +225,61 @@ while True:
             exit(0)
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_w:
-                keys[0] = True
+                keys1[0] = True
             elif event.key == pygame.K_a:
-                keys[1] = True
+                keys1[1] = True
             elif event.key == pygame.K_s:
-                keys[2] = True
+                keys1[2] = True
             elif event.key == pygame.K_d:
-                keys[3] = True
+                keys1[3] = True
             elif event.key == pygame.K_q and time.time() - pre_time >= Mundo1.cooltime_limit:
                 pre_time = Mundo1.attack()
-            elif event.key==pygame.K_r and time.time()-pre3_time>=Mundo1.spell1cool:
-                pre3_time=Mundo1.spelluse('r')
-            elif event.key==pygame.K_f and time.time()-pre4_time>=Mundo1.spell2cool:
-                pre4_time=Mundo1.spelluse('f')
+            elif event.key == pygame.K_r and time.time() - pre3_time >= Mundo1.spell1cool:
+                pre3_time = Mundo1.spelluse('r')
+            elif event.key == pygame.K_f and time.time() - pre4_time >= Mundo1.spell2cool:
+                pre4_time = Mundo1.spelluse('f')
             if time.time() - pree_time >= 1:
                 Mundo1.health += Mundo1.healthregen
                 Mundo2.health += Mundo2.healthregen
                 pree_time = time.time()
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_w:
-                keys[0] = False
+                keys1[0] = False
             elif event.key == pygame.K_a:
-                keys[1] = False
+                keys1[1] = False
             elif event.key == pygame.K_s:
-                keys[2] = False
+                keys1[2] = False
             elif event.key == pygame.K_d:
-                keys[3] = False
-    Mundo1.move(keys[0], keys[1], keys[2], keys[3],1)
+                keys1[3] = False
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_UP:
+                keys2[0] = True
+            elif event.key == pygame.K_LEFT:
+                keys2[1] = True
+            elif event.key == pygame.K_DOWN:
+                keys2[2] = True
+            elif event.key == pygame.K_RIGHT:
+                keys2[3] = True
+            elif event.key == pygame.K_0 and time.time() - pre_time >= Mundo2.cooltime_limit:
+                pre_time = Mundo2.attack()
+            elif event.key==pygame.K_1 and time.time()-pre3_time>=Mundo2.spell1cool:
+                pre3_time=Mundo2.spelluse('r')
+            elif event.key==pygame.K_2 and time.time()-pre4_time>=Mundo2.spell2cool:
+                pre4_time=Mundo2.spelluse('f')
+            if time.time() - pree_time >= 1:
+                Mundo1.health += Mundo1.healthregen
+                Mundo2.health += Mundo2.healthregen
+                pree_time = time.time()
+        if event.type == pygame.KEYUP:
+            if event.key == pygame.K_UP:
+                keys2[0] = False
+            elif event.key == pygame.K_LEFT:
+                keys2[1] = False
+            elif event.key == pygame.K_DOWN:
+                keys2[2] = False
+            elif event.key == pygame.K_RIGHT:
+                keys2[3] = False
+    Mundo1.move(keys1[0], keys1[1], keys1[2], keys1[3],1)
+    Mundo2.move(keys2[0], keys2[1], keys2[2], keys2[3],1)
+
+
