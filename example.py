@@ -9,7 +9,7 @@ pre3_time=time.time()
 pre4_time=time.time()
 TEXTCOLOR = (255, 255, 255)
 
-#
+
 class Mundo:
     def __init__(self, x, y):
         self.health = 100
