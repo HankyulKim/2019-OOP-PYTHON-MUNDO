@@ -230,11 +230,19 @@ check1=0
 check2=0
 check_time1=0
 check_time2=0
+check=1
+check_time=0
 while True:
     basicscreenblit()
     position = pygame.mouse.get_pos()
     mundoblit(Mundo1, position,check1)
     mundoblit(Mundo2, position,check2)
+    if(Mundo1.x<=135 and Mundo2.x<=135):
+        mundoblit(Mundo1, position, check)
+        mundoblit(Mundo2, position, check)
+    if (Mundo1.x >= 500 and Mundo2.x >= 500):
+        mundoblit(Mundo1, position, check)
+        mundoblit(Mundo2, position, check)
     if(check_time1 !=0):
         now_time1=time.time()
         if(now_time1-check_time1>=0.5):
