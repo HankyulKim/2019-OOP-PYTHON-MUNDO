@@ -16,7 +16,7 @@ class Mundo:
         self.strength = 100
         self.armor = 100
         self.healthregen = 0.02
-        self.cooltime_limit = 0.2
+        self.cooltime_limit = 0.5
         self.arrows = []
         self.spell1type = 1
         self.spell1cool = 3
