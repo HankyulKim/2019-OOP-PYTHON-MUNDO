@@ -98,8 +98,18 @@ def spelluses(mx,my,spelltype)->list:
     if spelltype == "flash":
         posi = pygame.mouse.get_pos()
         angle = math.atan2(posi[1] - (my + 32), posi[0] - (mx + 26))
-        list.append(mx+math.cos(angle)*100)
-        list.append(my+math.sin(angle)*100)
+        if(my<=220 and (my+math.sin(angle)*100)>=220):
+            list.append(mx+math.cos(angle)*100)
+            list.append(220)
+        if(my<=220 and (my+math.sin(angle)*100)<=220):
+            list.append(mx+math.cos(angle)*100)
+            list.append(my+math.sin(angle)*100)
+        if(my>=260 and (my+math.sin(angle)*100)>=260):
+            list.append(mx + math.cos(angle) * 100)
+            list.append(my + math.sin(angle) * 100)
+        if(my>=260 and (my+math.sin(angle)*100)<=260):
+            list.append(mx + math.cos(angle) * 100)
+            list.append(260)
         list.append("flash")
         pygame.mixer.music.load('resources/audio/flash.mp3')
         pygame.mixer.music.play(0)
