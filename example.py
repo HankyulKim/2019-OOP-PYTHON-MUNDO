@@ -260,11 +260,11 @@ while True:
                 keys2[2] = True
             elif event.key == pygame.K_RIGHT:
                 keys2[3] = True
-            elif event.key == pygame.K_0 and time.time() - pre_time >= Mundo2.cooltime_limit:
+            elif event.key == pygame.K_SLASH and time.time() - pre_time >= Mundo2.cooltime_limit:
                 pre_time = Mundo2.attack()
-            elif event.key==pygame.K_1 and time.time()-pre3_time>=Mundo2.spell1cool:
+            elif event.key==pygame.K_COMMA and time.time()-pre3_time>=Mundo2.spell1cool:
                 pre3_time=Mundo2.spelluse('r')
-            elif event.key==pygame.K_2 and time.time()-pre4_time>=Mundo2.spell2cool:
+            elif event.key==pygame.K_PERIOD and time.time()-pre4_time>=Mundo2.spell2cool:
                 pre4_time=Mundo2.spelluse('f')
             if time.time() - pree_time >= 1:
                 Mundo1.health += Mundo1.healthregen
