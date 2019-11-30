@@ -280,6 +280,6 @@ while True:
             elif event.key == pygame.K_RIGHT:
                 keys2[3] = False
     Mundo1.move(keys1[0], keys1[1], keys1[2], keys1[3],1)
-    Mundo2.move(keys2[0], keys2[1], keys2[2], keys2[3],1)
+    Mundo2.move(keys2[0], keys2[1], keys2[2], keys2[3],2)
 
 
