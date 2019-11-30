@@ -232,8 +232,27 @@ check_time1=0
 check_time2=0
 check=1
 check_time=0
+
 while True:
     basicscreenblit()
+    if(Mundo1.health>0):
+        mun1=str(Mundo1.health)
+        font1 = pygame.font.SysFont('Liberation Serif', 24)  # 폰트 설정
+        text1 = font1.render(mun1, True, (28, 0, 0))
+        screen.blit(text1,(320,100))
+    if(Mundo1.health<=0):
+        font1 = pygame.font.SysFont('Liberation Serif', 24)  # 폰트 설정
+        text1 = font1.render("you die", True, (28, 0, 0))
+        screen.blit(text1, (320, 100))
+    if(Mundo2.health>0):
+        mun2 = str(Mundo2.health)
+        font2 = pygame.font.SysFont('Liberation Serif', 24)  # 폰트 설정
+        text2 = font2.render(mun2, True, (28, 0, 0))
+        screen.blit(text2, (320, 320))
+    if (Mundo2.health <= 0):
+        font2 = pygame.font.SysFont('Liberation Serif', 24)  # 폰트 설정
+        text2 = font2.render("you die", True, (28, 0, 0))
+        screen.blit(text2, (320, 320))
     position = pygame.mouse.get_pos()
     mundoblit(Mundo1, position,check1)
     mundoblit(Mundo2, position,check2)
