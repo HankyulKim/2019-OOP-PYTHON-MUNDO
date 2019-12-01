@@ -93,6 +93,8 @@ class Mundo:
             if time.time()-pre2_time>=2:
                 self.speed=3
             index1+=1
+        if time.time() - pre2_time >= 2:
+            self.speed = 3
 def spelluses(mx,my,spelltype)->list:
     list = []
     if spelltype == "flash":
@@ -250,6 +252,7 @@ while True:
         font2 = pygame.font.SysFont('Liberation Serif', 24)  # 폰트 설정
         text2 = font2.render("you die", True, (28, 0, 0))
         screen.blit(text2, (320, 320))
+
     position = pygame.mouse.get_pos()
     mundoblit(Mundo1, position,check1)
     mundoblit(Mundo2, position,check2)
