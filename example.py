@@ -13,9 +13,9 @@ TEXTCOLOR = (255, 255, 255)
 class Mundo:
     def __init__(self, x, y):
         self.health = 100
-        self.strength = 100
+        self.strength = 30
         self.armor = 100
-        self.healthregen = 0.02
+        self.healthregen = 5
         self.cooltime_limit = 0.7
         self.arrows = []
         self.spell1type = 1
@@ -89,9 +89,9 @@ class Mundo:
                 pygame.mixer.music.load('resources/audio/injured.mp3')
                 pygame.mixer.music.play(0)
                 pre2_time=time.time()
-                self.speed=3
+                self.speed=1
             if time.time()-pre2_time>=2:
-                self.speed=5
+                self.speed=3
             index1+=1
 def spelluses(mx,my,spelltype)->list:
     list = []
@@ -223,6 +223,7 @@ grass = pygame.image.load("resources/images/grass.png")
 bush = pygame.image.load("resources/images/bush.png")
 arrow = pygame.image.load("resources/images/bullet.png")
 wall = pygame.image.load("resources/images/wall.png")
+healthbar =pygame.image.load("resources/images/healthbar.png")
 
 keys1 = [False, False, False, False]
 keys2 = [False, False, False, False]
@@ -236,19 +237,15 @@ check_time=0
 while True:
     basicscreenblit()
     if(Mundo1.health>0):
-        mun1=str(Mundo1.health)
-        font1 = pygame.font.SysFont('Liberation Serif', 24)  # 폰트 설정
-        text1 = font1.render(mun1, True, (28, 0, 0))
-        screen.blit(text1,(320,100))
+        newhealth1=pygame.transform.scale(healthbar,(int(Mundo1.health)*2,20))
+        screen.blit(newhealth1,(220,220))
     if(Mundo1.health<=0):
         font1 = pygame.font.SysFont('Liberation Serif', 24)  # 폰트 설정
         text1 = font1.render("you die", True, (28, 0, 0))
         screen.blit(text1, (320, 100))
     if(Mundo2.health>0):
-        mun2 = str(Mundo2.health)
-        font2 = pygame.font.SysFont('Liberation Serif', 24)  # 폰트 설정
-        text2 = font2.render(mun2, True, (28, 0, 0))
-        screen.blit(text2, (320, 320))
+        newhealth2 = pygame.transform.scale(healthbar, (int(Mundo2.health) * 2, 20))
+        screen.blit(newhealth2, (220, 260))
     if (Mundo2.health <= 0):
         font2 = pygame.font.SysFont('Liberation Serif', 24)  # 폰트 설정
         text2 = font2.render("you die", True, (28, 0, 0))
