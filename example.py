@@ -1,28 +1,32 @@
+ # 출처:https://opentutorials.org/course/3045
+ # 이외의 내용은 pygame documentation을 참고함.
+ #
+ #
 import pygame, math
 import sys
 import time
 
+
 pre_time = time.time()
 pree_time = time.time()
 pre2_time=time.time()
-pre3_time=time.time()
-pre4_time=time.time()
+total_time=time.time()
 TEXTCOLOR = (255, 255, 255)
 
 
 class Mundo:
     def __init__(self, x, y):
         self.health = 100
-        self.strength = 30
+        self.strength = 50
         self.armor = 100
         self.healthregen = 5
-        self.cooltime_limit = 0.7
+        self.cooltime_limit = 2.0
         self.arrows = []
         self.spell1type = 1
-        self.spell1cool = 3
+        self.spell1cool = 5
         self.spell2type = 2
-        self.spell2cool = 3
-        self.spelllist=[0,"heal","flash", "ignite", "exhaust", "ghost"]
+        self.spell2cool = 10
+        self.spelllist=[0,"flash","heal","ghost"]
         self.speed=3
         self.x = x
         self.y = y
@@ -69,8 +73,8 @@ class Mundo:
         self.y = returnlist[1]
         if returnlist[2]=='heal':
             self.health+=20
-        if returnlist[2]=='ghost':
-            self.speed=7
+        elif returnlist[2]=='ghost':
+            self.speed=4
 
         return tmtime
 
@@ -90,10 +94,10 @@ class Mundo:
                 pygame.mixer.music.play(0)
                 pre2_time=time.time()
                 self.speed=1
-            if time.time()-pre2_time>=2:
+            if time.time()-pre2_time>=2 and self.speed!=4:
                 self.speed=3
             index1+=1
-        if time.time() - pre2_time >= 2:
+        if time.time() - pre2_time >= 2 and self.speed!=4:
             self.speed = 3
 def spelluses(mx,my,spelltype)->list:
     list = []
@@ -119,20 +123,63 @@ def spelluses(mx,my,spelltype)->list:
         list.append(mx)
         list.append(my)
         list.append("heal")
-    elif spelltype == "ignite":
-        list.append(mx)
-        list.append(my)
-        list.append("ignite")
-    elif spelltype == "exhaust":
-        list.append(mx)
-        list.append(my)
-        list.append("exhaust")
     elif spelltype == "ghost":
         list.append(mx)
         list.append(my)
         list.append("ghost")
     return list
 
+def spellchoice(class1,flag):
+    background = pygame.image.load("resources/images/background2.jpg")
+    window.blit(background, (0, 0))
+    pygame.display.update()
+    if flag==1:
+        draw_text("Choose attacker's spells.", font0, window, (width / 3) - 150, (height / 3))
+    elif flag == 2:
+        draw_text("Choose defender's spells.", font0, window, (width / 3) - 150, (height / 3))
+    draw_text("1 :      flash  (cool 5)   teleport a little(direction: mouse cursor)", font1, window, (width / 3) - 150, (height / 3) + 50)
+    draw_text("2 :      heal   (cool 10)   recover HP 20", font1, window, (width / 3) - 150, (height / 3) + 70)
+    draw_text("3 :      ghost  (cool 20)  move faster until you hit", font1, window, (width / 3) - 150, (height / 3) + 90)
+    pygame.display.update()
+    count = 0
+    choice = {1: 'flash', 2: 'heal', 3: 'ghost'}
+    presslist = []
+    while count < 2:
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_1:
+                    presslist.append(1)
+                    if count == 0:
+                        class1.spell1type = 1
+                        class1.spell1cool=5
+                    elif count == 1:
+                        class1.spell2type = 1
+                        class1.spell2cool = 5
+                    count += 1
+                elif event.key == pygame.K_2:
+                    presslist.append(2)
+                    if count == 0:
+                        class1.spell1type = 2
+                        class1.spell1cool = 10
+                    elif count == 1:
+                        class1.spell2type = 2
+                        class1.spell2cool = 10
+                    count += 1
+                elif event.key == pygame.K_3:
+                    presslist.append(3)
+                    if count == 0:
+                        class1.spell1type = 3
+                        class1.spell1cool = 20
+                    elif count == 1:
+                        class1.spell2type = 3
+                        class1.spell2cool = 20
+                    count += 1
+    window.blit(background, (0, 0))
+    draw_text("You chose two spells", font0, window, (width / 3) - 150, (height / 3))
+    draw_text("Choice 1 : %s" % (choice[presslist[0]]), font1, window, (width / 3) - 150, (height / 3) + 50)
+    draw_text("Choice 2 : %s" % (choice[presslist[1]]), font1, window, (width / 3) - 150, (height / 3) + 70)
+    pygame.display.update()
+    wait_for_key_pressed()
 
 def basicscreenblit():
     screen.fill((0, 0, 0))  # R,G,B
@@ -149,7 +196,7 @@ def basicscreenblit():
     screen.blit(bush, (540, 345))
     for x in range(width // wall.get_width() + 1):
         screen.blit(wall, (x * 40, 240))
-
+    total_time = time.time();
 
 def mundoblit(tmpmundo, pos,a):  # 문도의 상태 갱신
     angle = math.atan2(pos[1] - (tmpmundo.y + 32), pos[0] - (tmpmundo.x + 26))
@@ -199,7 +246,7 @@ def draw_text(text, font, surface, x, y):  # 화면에 텍스트 입력
     surface.blit(font.render(text, True, TEXTCOLOR), text_rect)
 
 
-def exit_game(self):  # 게임 종료
+def exit_game():  # 게임 종료
     pygame.quit()
     sys.exit()
 
@@ -219,6 +266,8 @@ draw_text("press annie key to start!", font1, window, (width / 3), (height / 3) 
 draw_text("2019 OOP project by team MUNDO", font1, window, (width / 3) * 2 - 100, (height / 3) * 2 + 100)
 pygame.display.update()
 wait_for_key_pressed()
+spellchoice(Mundo1,1)
+spellchoice(Mundo2,2)
 screen = pygame.display.set_mode((width, height))
 mundo = pygame.image.load("resources/images/mundo.png")
 grass = pygame.image.load("resources/images/grass.png")
@@ -235,19 +284,75 @@ check_time1=0
 check_time2=0
 check=1
 check_time=0
+pre3_time=time.time()
+pre4_time=time.time()
+pre5_time=time.time()
+pre6_time=time.time()
 
 while True:
     basicscreenblit()
     if(Mundo2.health>0):
+        font2 = pygame.font.SysFont('Liberation Serif', 20)
         newhealth2 = pygame.transform.scale(healthbar, (int(Mundo2.health) * 2, 20))
         screen.blit(newhealth2, (220, 260))
+        tm0=time.time() - pre_time
+        tm1= time.time() - pre3_time
+        tm2 = time.time() - pre4_time
+        tm3 = time.time() - pre5_time
+        tm4 = time.time() - pre6_time
+        if tm0>=Mundo1.cooltime_limit:
+            tm0=Mundo1.cooltime_limit
+        if tm1>=Mundo1.spell1cool:
+            tm1=Mundo1.spell1cool
+        if tm2>=Mundo1.spell2cool:
+            tm2=Mundo1.spell2cool
+        if tm3>=Mundo2.spell1cool:
+            tm3=Mundo2.spell1cool
+        if tm4>=Mundo2.spell2cool:
+            tm4=Mundo2.spell2cool
+        tex0 = font2.render("q_cooltime", True, (0, 255, 255))
+        tex1 = font2.render("r (spell1)", True, (255, 255, 255))
+        tex2 = font2.render("f (spell2)", True, (255, 255, 255))
+        tex3 = font2.render(", (spell1)", True, (255, 255, 255))
+        tex4 = font2.render(". (spell2)", True, (255, 255, 255))
+        q_cooltime = pygame.transform.scale(healthbar, (int((tm0) / Mundo1.cooltime_limit* 100) * 2, 20))
+        Mundo1spell1 = pygame.transform.scale(healthbar, (int((tm1)/Mundo1.spell1cool*100) * 2, 20))
+        Mundo1spell2 = pygame.transform.scale(healthbar, (int((tm2) / Mundo1.spell2cool * 100) * 2, 20))
+        Mundo2spell1 = pygame.transform.scale(healthbar,(int((tm3) / Mundo2.spell1cool * 100) * 2, 20))
+        Mundo2spell2 = pygame.transform.scale(healthbar,(int((tm4) / Mundo2.spell2cool * 100) * 2, 20))
+        screen.blit(tex0, (10, 30))
+        screen.blit(tex1, (10, 10))
+        screen.blit(tex2, (350, 10))
+        screen.blit(tex3, (10, 440))
+        screen.blit(tex4, (350, 440))
+        screen.blit(q_cooltime, (80, 30))
+        screen.blit(Mundo1spell1,(80,10))
+        screen.blit(Mundo1spell2, (420, 10))
+        screen.blit(Mundo2spell1, (80, 440))
+        screen.blit(Mundo2spell2, (420, 440))
+
     if (Mundo2.health <= 0):
-        font2 = pygame.font.SysFont('Liberation Serif', 24)  # 폰트 설정
-        text2 = font2.render("you die", True, (28, 0, 0))
-        screen.blit(text2, (320, 320))
+        font2 = pygame.font.SysFont('Liberation Serif', 28)  # 폰트 설정
+        window.blit(background, (0, 0))
+        timeprint='total time: '+str(int((time.time()-total_time)))+' s'
+        text2 = font2.render("you die", True, (255, 255, 255))
+        text3=font2.render(timeprint,True,(255,255,255))
+        text4 = font2.render("auto-retry in 3 seconds", True, (255, 255, 255))
+        screen.blit(text2, (200, 320))
+        screen.blit(text3,(200,360))
+        screen.blit(text4, (200, 400))
+        pygame.display.update()
+        time.sleep(3)
+        Mundo2.health=100
+        Mundo1.x = 320.0
+        Mundo1.y = 100.0
+        Mundo2.x=320.0
+        Mundo2.y=400.0
+        total_time=time.time()
     if time.time() - pree_time >= 1:
-        Mundo1.health += Mundo1.healthregen
         Mundo2.health += Mundo2.healthregen
+        if Mundo2.health>=100.0:
+            Mundo2.health=100.0
         pree_time = time.time()
     position = pygame.mouse.get_pos()
     mundoblit(Mundo1, position,check1)
@@ -293,10 +398,6 @@ while True:
                 pre3_time = Mundo1.spelluse('r')
             elif event.key == pygame.K_f and time.time() - pre4_time >= Mundo1.spell2cool:
                 pre4_time = Mundo1.spelluse('f')
-            if time.time() - pree_time >= 1:
-                Mundo1.health += Mundo1.healthregen
-                Mundo2.health += Mundo2.healthregen
-                pree_time = time.time()
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_w:
                 keys1[0] = False
@@ -315,10 +416,10 @@ while True:
                 keys2[2] = True
             elif event.key == pygame.K_RIGHT:
                 keys2[3] = True
-            elif event.key==pygame.K_SLASH and time.time()-pre3_time>=Mundo2.spell1cool:
-                pre3_time=Mundo2.spelluse('r')
-            elif event.key==pygame.K_PERIOD and time.time()-pre4_time>=Mundo2.spell2cool:
-                pre4_time=Mundo2.spelluse('f')
+            elif event.key==pygame.K_COMMA and time.time()-pre5_time>=Mundo2.spell1cool:
+                pre5_time=Mundo2.spelluse('r')
+            elif event.key==pygame.K_PERIOD and time.time()-pre6_time>=Mundo2.spell2cool:
+                pre6_time=Mundo2.spelluse('f')
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_UP:
                 keys2[0] = False
