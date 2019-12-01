@@ -238,13 +238,6 @@ check_time=0
 
 while True:
     basicscreenblit()
-    if(Mundo1.health>0):
-        newhealth1=pygame.transform.scale(healthbar,(int(Mundo1.health)*2,20))
-        screen.blit(newhealth1,(220,220))
-    if(Mundo1.health<=0):
-        font1 = pygame.font.SysFont('Liberation Serif', 24)  # 폰트 설정
-        text1 = font1.render("you die", True, (28, 0, 0))
-        screen.blit(text1, (320, 100))
     if(Mundo2.health>0):
         newhealth2 = pygame.transform.scale(healthbar, (int(Mundo2.health) * 2, 20))
         screen.blit(newhealth2, (220, 260))
@@ -252,7 +245,10 @@ while True:
         font2 = pygame.font.SysFont('Liberation Serif', 24)  # 폰트 설정
         text2 = font2.render("you die", True, (28, 0, 0))
         screen.blit(text2, (320, 320))
-
+    if time.time() - pree_time >= 1:
+        Mundo1.health += Mundo1.healthregen
+        Mundo2.health += Mundo2.healthregen
+        pree_time = time.time()
     position = pygame.mouse.get_pos()
     mundoblit(Mundo1, position,check1)
     mundoblit(Mundo2, position,check2)
@@ -328,10 +324,6 @@ while True:
                 pre3_time=Mundo2.spelluse('r')
             elif event.key==pygame.K_COMMA and time.time()-pre4_time>=Mundo2.spell2cool:
                 pre4_time=Mundo2.spelluse('f')
-            if time.time() - pree_time >= 1:
-                Mundo1.health += Mundo1.healthregen
-                Mundo2.health += Mundo2.healthregen
-                pree_time = time.time()
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_UP:
                 keys2[0] = False
