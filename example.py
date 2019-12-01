@@ -1,7 +1,11 @@
+ # 출처:https://opentutorials.org/course/3045
+ # 이외의 내용은 pygame documentation을 참고함.
+ #
+ #
 import pygame, math
 import sys
 import time
-## 1234
+
 
 pre_time = time.time()
 pree_time = time.time()
